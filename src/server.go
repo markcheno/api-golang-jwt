@@ -117,6 +117,7 @@ func router() http.Handler {
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)
 		r.Use(middleware.Recoverer)
+		r.Use(middleware.DefaultCompress)
 		r.Use(cors.Handler)
 		r.Use(RequireTokenAuthentication)
 
@@ -137,6 +138,7 @@ func router() http.Handler {
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)
 		r.Use(middleware.Recoverer)
+		r.Use(middleware.DefaultCompress)
 		r.Use(cors.Handler)
 
 		// home
