@@ -169,7 +169,10 @@ func router() http.Handler {
 				return
 			}
 
+			// expire unix
 			var expir = time.Now().Add(time.Minute * 60).Unix()
+
+			//claims
 			claims := Claims{
 				"super-id-of-mongodb-user",
 				true,
@@ -178,6 +181,7 @@ func router() http.Handler {
 					Issuer:    "localhost:3333",
 				},
 			}
+
 			// create token & sign token
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 			t, err := token.SignedString([]byte(SecretKey))
@@ -189,6 +193,7 @@ func router() http.Handler {
 				return
 			}
 
+			//write json
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(201)
 			fmt.Fprintf(w, `{"token":%q, "expire":%q}`, t, time.Unix(expir, 0))

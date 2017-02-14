@@ -34,17 +34,19 @@ Date: Mon, 13 Feb 2017 12:22:17 GMT
 Vary: Origin
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaWQtb2YtdXNlci1uaWNlIiwiYWRtaW4iOnRydWUsImV4cCI6MTQ4NzA3NDkzNywiaXNzIjoibG9jYWxob3N0OjMzMzMifQ.6Xxg678o6WrhQULMtYA9Z7GXICsruFrXIcHPIqQy6cw"
+    "expire": "2017-02-14 15:14:25 -0200 BRST", 
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXItaWQtb2YtbW9uZ29kYi11c2VyIiwiYWRtaW4iOnRydWUsImV4cCI6MTQ4NzA5MjQ2NSwiaXNzIjoibG9jYWxob3N0OjMzMzMifQ.lEy23l89sAe03g9Dg24FUiqUKEopSt61f-CE-1U6SpM"
 }
+
 ```
 
 
-Save your token on a txt file, like `token.txt` and use a get on `/admin` endpoint to test token.
+Save your token on a txt file, like `token.txt` and use a `GET` on `/admin` endpoint to test token.
 ```sh
 $ http --verbose --auth-type=jwt --auth=$(cat token.txt): get http://localhost:3333/admin
 ```
 
-End we got.
+Request
 
 ```sh
 GET /admin HTTP/1.1
@@ -54,7 +56,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaWQtb
 Connection: keep-alive
 Host: localhost:3333
 User-Agent: HTTPie/0.9.9
-
 
 
 HTTP/1.1 200 OK
