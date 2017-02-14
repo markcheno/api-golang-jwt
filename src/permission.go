@@ -18,8 +18,9 @@ const (
 
 func checkFlags(route string, perms int) bool {
 	var flag = false
+	route = strings.ToUpper(route)
 
-	switch strings.ToUpper(route) {
+	switch route {
 	case "GET":
 
 		if (perms & FLAGREAD) > 0 {
@@ -72,9 +73,9 @@ func checkUserPermisson(action string, endpoint string) {
 
 	//return mongodb the actions
 	var actions = map[string]int{
-		//"GET":  1,
-		//"POST": 2,
-		//"UPDATE": 4,
+		"GET":    1,
+		"POST":   2,
+		"UPDATE": 4,
 		"DELETE": 8,
 		//"ALL": 16,
 	}
@@ -82,20 +83,20 @@ func checkUserPermisson(action string, endpoint string) {
 	//intereate each permission and sum
 	var perms = 0
 	for k, v := range actions {
-		fmt.Printf("key[%s] value[%d]\n", k, v)
+		fmt.Printf("method[%s] bit[%d]\n", k, v)
 		perms |= v
-		fmt.Printf("permission  = %d\n", perms)
+		fmt.Printf("permission = %d\n", perms)
 	}
 
 	//check if return something and the flags are ok
 	if perms > 0 && checkFlags(action, perms) {
-		log.Printf("Authorized")
+		log.Printf("Accept - Authorized")
 	} else {
-		log.Printf("UNauthorized")
+		log.Printf("Denied - UNAuthorized")
 	}
 
 }
 
 func main() {
-	checkUserPermisson("GET", "report")
+	checkUserPermisson("DELETE", "report")
 }

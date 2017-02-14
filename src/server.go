@@ -169,11 +169,12 @@ func router() http.Handler {
 				return
 			}
 
+			var expir = time.Now().Add(time.Minute * 60).Unix()
 			claims := Claims{
 				"super-id-of-mongodb-user",
 				true,
 				jwt.StandardClaims{
-					ExpiresAt: time.Now().Add(time.Second * 3600 * 24).Unix(),
+					ExpiresAt: expir,
 					Issuer:    "localhost:3333",
 				},
 			}
@@ -190,7 +191,7 @@ func router() http.Handler {
 
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(201)
-			fmt.Fprintf(w, `{"token":%q}`, t)
+			fmt.Fprintf(w, `{"token":%q, "expire":%q}`, t, time.Unix(expir, 0))
 		})
 
 	})
