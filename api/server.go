@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	route "../routes"
+	route "./routes"
 )
 
 func main() {

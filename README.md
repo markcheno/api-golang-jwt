@@ -1,6 +1,6 @@
 # API-Golang-jwt
 
-#### Bateries of POC
+### Bateries of POC
 * Golang 1.7.3
 * JWT
 * Linux Ubuntu
@@ -8,10 +8,10 @@
 * HTTPie framework
 * Glide
 
-#### Update project dependencies
+### Update project dependencies
 Before you running the server. Use the `glide` for update all packages of project.
 
-#### POC Running
+### POC Running
 POC of `API with jwt` more `Permission(bitwise)` middleware per route.
 
 Generate a valid token. Post `/auth` with fields ***email*** and ***password***
@@ -75,6 +75,41 @@ Vary: Origin
 protected area. USER ID = id-of-user-nice
 ```
 
+### Project tree
+```sh
+.
+├── api
+│   ├── config
+│   ├── controllers
+│   │   ├── admin.go
+│   │   └── auth.go
+│   ├── dbs
+│   │   └── mongodb.go
+│   ├── middlewares
+│   │   ├── permission.go
+│   │   └── requiretoken.go
+│   ├── models
+│   │   ├── jwt.go
+│   │   ├── permission.go
+│   │   └── user.go
+│   ├── routes
+│   │   ├── main.go
+│   │   ├── protected.go
+│   │   └── public.go
+│   ├── server.go
+│   ├── services
+│   │   └── jwtauth.go
+│   └── webapp
+│       └── init.go
+├── docs
+│   └── httpie.txt
+├── glide.lock
+├── glide.yaml
+├── README.md
+├── scripts
+└── token.txt
+
+```
 ---
 
 The MIT License (MIT)
