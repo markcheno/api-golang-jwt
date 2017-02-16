@@ -5,10 +5,12 @@ import (
 
 	"github.com/pressly/chi"
 	"github.com/rs/cors"
+
+	db "../dbs"
 )
 
 //Router main rules of routes
-func Router() http.Handler {
+func Router(s *db.Dispatch) http.Handler {
 	r := chi.NewRouter()
 
 	//CORS setup
@@ -22,9 +24,9 @@ func Router() http.Handler {
 	})
 
 	// Protected routes
-	r.Group(Protected(cors))
+	r.Group(Protected(s, cors))
 	// Public routes
-	r.Group(Public(cors))
+	r.Group(Public(s, cors))
 
 	return r
 }

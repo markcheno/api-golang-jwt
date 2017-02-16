@@ -6,10 +6,11 @@ import (
 	"github.com/rs/cors"
 
 	controller "../controllers"
+	db "../dbs"
 )
 
 //Public Routes
-func Public(cors *cors.Cors) func(r chi.Router) {
+func Public(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)
@@ -22,6 +23,10 @@ func Public(cors *cors.Cors) func(r chi.Router) {
 
 		// Authenticate user
 		r.Post("/auth", controller.Auth())
+
+		//CRUD User
+		r.Post("/user", constroller.CreateUser(s))
+		r.Get("/user/:id", constroller.GetUser(s))
 
 	}
 }

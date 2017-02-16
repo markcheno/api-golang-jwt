@@ -6,11 +6,12 @@ import (
 	"github.com/rs/cors"
 
 	controller "../controllers"
+	db "../dbs"
 	mid "../middlewares"
 )
 
 //Protected Routes
-func Protected(cors *cors.Cors) func(r chi.Router) {
+func Protected(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)

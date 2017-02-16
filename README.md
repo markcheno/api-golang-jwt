@@ -4,12 +4,15 @@
 * Golang 1.7.3
 * JWT
 * Linux Ubuntu
-* DB not defined yet! (MongoDB or PostgreSQL)
+* MongoDB / PostgreSQL / Redis
 * HTTPie framework
 * Glide
 
 ### Update project dependencies
 Before you running the server. Use the `glide` for update all packages of project.
+
+### DB Dispatch
+We can use one or more database / cache in same time, just add the session of db on `db/dispatch.go`
 
 ### POC Running
 POC of `API with jwt` more `Permission(bitwise)` middleware per route.
