@@ -1,0 +1,8 @@
+ Gerar Token
+ -----------
+ http --verbose --auth-type=jwt --auth=$(cat token.txt): get http://localhost:3333/admin
+
+
+ Logar com o Token
+ -----------------
+ http --verbose post http://localhost:3333/auth email=tzilli@inviron.com.br password=123
