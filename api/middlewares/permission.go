@@ -80,11 +80,11 @@ func checkUserPermisson(action string, endpoint string, claims model.Claims) boo
 	//find no mongodb { user: user_id, endpoint: endpoint }
 	//MOC return mongodb the actions
 	var actions = map[string]int{
-		"GET":    1,
+		//"GET":    1,
 		"POST":   2,
 		"UPDATE": 4,
 		"DELETE": 8,
-		"ALL":    16,
+		//"ALL":    16,
 	}
 
 	//intereate each permission and sum bit each bit
