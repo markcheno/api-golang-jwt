@@ -1,7 +1,10 @@
 package models
 
+import "gopkg.in/mgo.v2/bson"
+
 // User model
 type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	ID       bson.ObjectId `json:"id" bson:"_id"`
+	Email    string        `json:"email" bson:"email"`
+	Password string        `json:"password" bson:"password"`
 }

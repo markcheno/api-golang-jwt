@@ -6,7 +6,12 @@
 * Linux Ubuntu
 * DB not defined yet! (MongoDB or PostgreSQL)
 * HTTPie framework
+* Glide
 
+#### Update project dependencies
+Before you running the server. Use the `glide` for update all packages of project.
+
+#### POC Running
 POC of `API with jwt` more `Permission(bitwise)` middleware per route.
 
 Generate a valid token. Post `/auth` with fields ***email*** and ***password***
