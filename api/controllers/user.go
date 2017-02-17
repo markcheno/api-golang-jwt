@@ -92,7 +92,7 @@ func DeleteUser(s *db.Dispatch) http.HandlerFunc {
 			default:
 				msg := []byte(`{"message":"ObjectId invalid"}`)
 				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusOK)
+				w.WriteHeader(http.StatusNotFound)
 				fmt.Fprintf(w, "%s", msg)
 
 			case mgo.ErrNotFound:

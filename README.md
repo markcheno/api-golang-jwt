@@ -93,7 +93,6 @@ protected area. USER ID = id-of-user-nice
 │   │   ├── permission.go
 │   │   └── requiretoken.go
 │   ├── models
-│   │   ├── action.go
 │   │   ├── jwt.go
 │   │   ├── permission.go
 │   │   ├── project.go

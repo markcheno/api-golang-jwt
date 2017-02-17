@@ -27,7 +27,7 @@ func Auth() http.HandlerFunc {
 
 		if errDecoder != nil {
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.WriteHeader(201)
+			w.WriteHeader(http.StatusForbidden)
 			fmt.Fprintf(w, `{"message":"Incorrect Decode JSON on body"}`)
 
 		}
@@ -36,14 +36,14 @@ func Auth() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Error : %q", err)
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.WriteHeader(201)
+			w.WriteHeader(http.StatusForbidden)
 			fmt.Fprintf(w, `{"message": %q}`, err)
 
 		}
 
 		//write json
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(201)
+		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(w, `{"token":%q, "expire":%s}`, t.Token, t.Expire)
 	}
 }
