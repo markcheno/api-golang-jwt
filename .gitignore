@@ -5,3 +5,5 @@ bin/*
 
 scripts/*
 !scripts/.gitkeep
+
+.env
