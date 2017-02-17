@@ -7,6 +7,7 @@ import (
 
 	controller "../controllers"
 	db "../dbs"
+	mid "../middlewares"
 )
 
 //Public Routes
@@ -17,6 +18,7 @@ func Public(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 		r.Use(middleware.Recoverer)
 		r.Use(middleware.DefaultCompress)
 		r.Use(cors.Handler)
+		r.Use(mid.LoggerRequest)
 
 		// home
 		r.Get("/", controller.Home())

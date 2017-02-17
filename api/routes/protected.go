@@ -20,6 +20,7 @@ func Protected(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 		r.Use(cors.Handler)
 		r.Use(mid.RequireTokenAuthentication)
 		r.Use(mid.RequirePermission)
+		r.Use(mid.LoggerRequest)
 
 		//endpoint protected
 		r.Get("/admin", controller.Admin())

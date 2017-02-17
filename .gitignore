@@ -1,1 +1,7 @@
 vendor/
+
+bin/*
+!bin/.gitkeep
+
+scripts/*
+!scripts/.gitkeep

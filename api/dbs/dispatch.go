@@ -1,6 +1,7 @@
 package dbs
 
 import (
+	"github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 )
 
@@ -9,13 +10,16 @@ import (
 // the session.
 type Dispatch struct {
 	MongoDB *mgo.Session
+	Logger  *logrus.Logger
 }
 
 //StartDispatch load up connections
 func StartDispatch() *Dispatch {
 	//add session of mongodb
 	mongosession := StartMongoDB().Session
+	// add logger for dispatch
+	logger := Logger()
 
-	return &Dispatch{MongoDB: mongosession}
+	return &Dispatch{MongoDB: mongosession, Logger: logger}
 
 }
