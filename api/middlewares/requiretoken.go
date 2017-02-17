@@ -36,6 +36,13 @@ func RequireTokenAuthentication(next http.Handler) http.Handler {
 			}
 		}
 
+		//if token not recovered on the last 3 steps
+		if tokenStr == "" {
+			log.Printf("[RequireTokenAuthentication] Not have Token to validate")
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
 		token, err := jwt.ParseWithClaims(tokenStr, &mid.Claims{}, func(token *jwt.Token) (interface{}, error) {
 			return []byte(mid.SecretKey), nil
 		})

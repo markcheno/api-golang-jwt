@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/pressly/chi"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
 	db "../dbs"
@@ -24,25 +26,20 @@ func GetUser(s *db.Dispatch) http.HandlerFunc {
 
 		// Verify id is ObjectId, otherwise bail
 		if !bson.IsObjectIdHex(id) {
-			w.WriteHeader(404)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		// Grab id
+
 		oid := bson.ObjectIdHex(id)
-		// Stub user
 		u := model.User{}
-		// Fetch user
 		if err := ss.DB("login").C("users").FindId(oid).One(&u); err != nil {
-			w.WriteHeader(404)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
-		// Marshal provided interface into JSON structure
 		uj, _ := json.Marshal(u)
-
-		// Write content-type, statuscode, payload
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(200)
+		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "%s", uj)
 	}
 }
@@ -56,22 +53,99 @@ func CreateUser(s *db.Dispatch) http.HandlerFunc {
 
 		// Stub an user to be populated from the body
 		u := model.User{}
-
-		// Populate the user data
 		json.NewDecoder(r.Body).Decode(&u)
 
 		// Add an Id
 		u.ID = bson.NewObjectId()
+		u.CreatedAt = time.Now()
+		u.UpdatedAt = time.Now()
 
-		// Write the user to mongo
 		ss.DB("login").C("users").Insert(u)
-
-		// Marshal provided interface into JSON structure
 		uj, _ := json.Marshal(u)
 
-		// Write content-type, statuscode, payload
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(201)
+		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(w, "%s", uj)
+	}
+}
+
+// DeleteUser remove user from database
+func DeleteUser(s *db.Dispatch) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		ss := s.MongoDB.Copy()
+		defer ss.Close()
+
+		id := chi.URLParam(r, "id")
+
+		if !bson.IsObjectIdHex(id) {
+			msg := []byte(`{"message":"ObjectId invalid"}`)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintf(w, "%s", msg)
+		}
+
+		c := ss.DB("login").C("users")
+
+		if err := c.Remove(bson.M{"_id": bson.ObjectIdHex(id)}); err != nil {
+			switch err {
+			default:
+				msg := []byte(`{"message":"ObjectId invalid"}`)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprintf(w, "%s", msg)
+
+			case mgo.ErrNotFound:
+				msg := []byte(`{"message":"ObjectId not found"}`)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				fmt.Fprintf(w, "%s", msg)
+			}
+		}
+
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+// UpdateUser update user
+func UpdateUser(s *db.Dispatch) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ss := s.MongoDB.Copy()
+		defer ss.Close()
+
+		id := chi.URLParam(r, "id")
+
+		// Verify id is ObjectId, otherwise bail
+		if !bson.IsObjectIdHex(id) {
+			msg := []byte(`{"message":"ObjectId invalid"}`)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintf(w, "%s", msg)
+		}
+
+		// Stub an user to be populated from the body
+		u := model.User{}
+		json.NewDecoder(r.Body).Decode(&u)
+		u.UpdatedAt = time.Now()
+
+		c := ss.DB("login").C("users")
+
+		if err := c.Update(bson.M{"_id": bson.ObjectIdHex(id)}, &u); err != nil {
+			switch err {
+			default:
+				msg := []byte(`{"message":"ObjectId invalid"}`)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				fmt.Fprintf(w, "%s", msg)
+
+			case mgo.ErrNotFound:
+				msg := []byte(`{"message":"ObjectId not found"}`)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				fmt.Fprintf(w, "%s", msg)
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
 	}
 }

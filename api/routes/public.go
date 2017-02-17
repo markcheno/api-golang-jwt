@@ -25,8 +25,6 @@ func Public(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 		r.Post("/auth", controller.Auth())
 
 		//CRUD User
-		r.Post("/user", constroller.CreateUser(s))
-		r.Get("/user/:id", constroller.GetUser(s))
-
+		r.Post("/user", controller.CreateUser(s))
 	}
 }

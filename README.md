@@ -80,20 +80,23 @@ protected area. USER ID = id-of-user-nice
 
 ### Project tree
 ```sh
-.
 ├── api
 │   ├── config
 │   ├── controllers
 │   │   ├── admin.go
-│   │   └── auth.go
+│   │   ├── auth.go
+│   │   └── user.go
 │   ├── dbs
+│   │   ├── dispatch.go
 │   │   └── mongodb.go
 │   ├── middlewares
 │   │   ├── permission.go
 │   │   └── requiretoken.go
 │   ├── models
+│   │   ├── action.go
 │   │   ├── jwt.go
 │   │   ├── permission.go
+│   │   ├── project.go
 │   │   └── user.go
 │   ├── routes
 │   │   ├── main.go

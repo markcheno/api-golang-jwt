@@ -64,6 +64,13 @@ func checkFlags(route string, perms int) bool {
 		if (perms & FLAGALL) > 0 {
 			flag = true
 		}
+
+		break
+	case "GOD":
+		if (perms & FLAGALL) > 0 {
+			flag = true
+		}
+
 		break
 	}
 
@@ -85,6 +92,7 @@ func checkUserPermisson(action string, endpoint string, claims model.Claims) boo
 		"UPDATE": 4,
 		"DELETE": 8,
 		//"ALL":    16,
+		//"GOD":    32,
 	}
 
 	//intereate each permission and sum bit each bit

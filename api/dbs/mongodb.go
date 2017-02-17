@@ -29,9 +29,10 @@ func StartMongoDB() *MgoSession {
 
 	mongoSession, err := mgo.DialWithInfo(mongoDBDialInfo)
 	if err != nil {
-		log.Fatalf("CreateSession: %s\n", err)
+		log.Fatalf("[MongoDB] CreateSession: %s\n", err)
 	}
 	mongoSession.SetMode(mgo.Monotonic, true)
 
+	log.Printf("[MongoDB] connected!")
 	return newMgoSession(mongoSession)
 }
