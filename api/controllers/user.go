@@ -12,6 +12,7 @@ import (
 
 	db "../dbs"
 	model "../models"
+	lib "../shared"
 )
 
 //GetUser get a user by Id
@@ -60,6 +61,10 @@ func CreateUser(s *db.Dispatch) http.HandlerFunc {
 		u.CreatedAt = time.Now()
 		u.UpdatedAt = time.Now()
 
+		if passwd, err := lib.Encrypt(u.Password); err == nil {
+			u.Password = passwd
+		}
+
 		ss.DB("login").C("users").Insert(u)
 		uj, _ := json.Marshal(u)
 
@@ -83,6 +88,7 @@ func DeleteUser(s *db.Dispatch) http.HandlerFunc {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusNotFound)
 			fmt.Fprintf(w, "%s", msg)
+			return
 		}
 
 		c := ss.DB("login").C("users")
@@ -101,6 +107,7 @@ func DeleteUser(s *db.Dispatch) http.HandlerFunc {
 				w.WriteHeader(http.StatusNotFound)
 				fmt.Fprintf(w, "%s", msg)
 			}
+			return
 		}
 
 		w.WriteHeader(http.StatusNoContent)
@@ -121,6 +128,7 @@ func UpdateUser(s *db.Dispatch) http.HandlerFunc {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusNotFound)
 			fmt.Fprintf(w, "%s", msg)
+			return
 		}
 
 		// Stub an user to be populated from the body
@@ -144,6 +152,7 @@ func UpdateUser(s *db.Dispatch) http.HandlerFunc {
 				w.WriteHeader(http.StatusNotFound)
 				fmt.Fprintf(w, "%s", msg)
 			}
+			return
 		}
 
 		w.WriteHeader(http.StatusOK)

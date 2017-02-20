@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	db "../dbs"
 	model "../models"
 	service "../services"
 )
@@ -18,7 +19,7 @@ func Home() http.HandlerFunc {
 }
 
 //Auth get a valid token and expire
-func Auth() http.HandlerFunc {
+func Auth(s *db.Dispatch) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var user model.User
@@ -29,16 +30,16 @@ func Auth() http.HandlerFunc {
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(http.StatusForbidden)
 			fmt.Fprintf(w, `{"message":"Incorrect Decode JSON on body"}`)
-
+			return
 		}
 
-		t, err := service.GenerateToken(user)
+		t, err := service.GenerateToken(s, user)
 		if err != nil {
 			log.Printf("Error : %q", err)
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(http.StatusForbidden)
 			fmt.Fprintf(w, `{"message": %q}`, err)
-
+			return
 		}
 
 		//write json

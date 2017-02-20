@@ -4,6 +4,8 @@ import (
 	"log"
 	"time"
 
+	"os"
+
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -20,7 +22,7 @@ func newMgoSession(s *mgo.Session) *MgoSession {
 func StartMongoDB() *MgoSession {
 
 	mongoDBDialInfo := &mgo.DialInfo{
-		Addrs:   []string{"localhost:27017"},
+		Addrs:   []string{os.Getenv("MONGODB_URL")},
 		Timeout: 60 * time.Second,
 		//Database: "",
 		//Username: "",

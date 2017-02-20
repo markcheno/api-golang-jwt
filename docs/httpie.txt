@@ -1,8 +1,19 @@
- Gerar Token
- -----------
- http --verbose --auth-type=jwt --auth=$(cat token.txt): get http://localhost:3333/admin
+Consult protected endpoint with token
+-------------------------------------
+http --verbose --auth-type=jwt --auth=$(cat token.txt): get http://localhost:3333/user/58aadf2ce3bdea2e00f9563b
 
 
- Logar com o Token
- -----------------
- http --verbose post http://localhost:3333/auth email=tzilli@inviron.com.br password=123
+Login and Generate Token
+------------------------
+http --verbose post http://localhost:3333/auth email=tzilli@inviron.com.br password=1233
+
+
+Create a user set admin
+------------------------
+http --verbose post http://localhost:3333/user email=tzilli@inviron.com.br password=1233 admin:=true
+
+
+Create a user permission by endpoint
+------------------------------------
+
+

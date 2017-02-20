@@ -15,8 +15,8 @@ const (
 	FLAGWRITE  int = 2  // 000010
 	FLAGUPDATE int = 4  // 000100
 	FLAGDELETE int = 8  // 001000
-	FLAGALL    int = 16 // 010000
-	GOD        int = 32 // 100000
+	OWNER      int = 16 // 010000
+	ADMIN      int = 32 // 100000
 )
 
 // CheckFlags, true for correspond action
@@ -29,7 +29,7 @@ func checkFlags(route string, perms int) bool {
 
 		if (perms & FLAGREAD) > 0 {
 			flag = true
-		} else if (perms & FLAGALL) > 0 {
+		} else if (perms & OWNER) > 0 {
 			flag = true
 		}
 		break
@@ -37,7 +37,7 @@ func checkFlags(route string, perms int) bool {
 
 		if (perms & FLAGWRITE) > 0 {
 			flag = true
-		} else if (perms & FLAGALL) > 0 {
+		} else if (perms & OWNER) > 0 {
 			flag = true
 		}
 
@@ -46,7 +46,7 @@ func checkFlags(route string, perms int) bool {
 
 		if (perms & FLAGUPDATE) > 0 {
 			flag = true
-		} else if (perms & FLAGALL) > 0 {
+		} else if (perms & OWNER) > 0 {
 			flag = true
 		}
 
@@ -55,19 +55,19 @@ func checkFlags(route string, perms int) bool {
 
 		if (perms & FLAGDELETE) > 0 {
 			flag = true
-		} else if (perms & FLAGALL) > 0 {
+		} else if (perms & OWNER) > 0 {
 			flag = true
 		}
 
 		break
-	case "ALL":
-		if (perms & FLAGALL) > 0 {
+	case "OWNER":
+		if (perms & OWNER) > 0 {
 			flag = true
 		}
 
 		break
-	case "GOD":
-		if (perms & FLAGALL) > 0 {
+	case "ADMIN":
+		if (perms & OWNER) > 0 {
 			flag = true
 		}
 
@@ -82,7 +82,7 @@ func checkFlags(route string, perms int) bool {
 func checkUserPermisson(action string, endpoint string, claims model.Claims) bool {
 	//recover the user_id from context
 
-	log.Printf("[CheckUserPermission] UserID = %s", claims.UserID)
+	log.Printf("[CheckUserPermission] UserID = %q", claims.UserID)
 
 	//find no mongodb { user: user_id, endpoint: endpoint }
 	//MOC return mongodb the actions
@@ -91,8 +91,8 @@ func checkUserPermisson(action string, endpoint string, claims model.Claims) boo
 		"POST":   2,
 		"UPDATE": 4,
 		"DELETE": 8,
-		//"ALL":    16,
-		//"GOD":    32,
+		//"OWNER":    16,
+		//"ADMIN":    32,
 	}
 
 	//intereate each permission and sum bit each bit
@@ -132,5 +132,6 @@ func RequirePermission(next http.Handler) http.Handler {
 		}
 
 		w.WriteHeader(http.StatusUnauthorized)
+		return
 	})
 }
