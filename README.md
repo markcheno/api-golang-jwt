@@ -4,7 +4,7 @@
 * Golang 1.7.3
 * JWT
 * Linux Ubuntu
-* MongoDB / PostgreSQL / Redis
+* MongoDB / Redis
 * HTTPie framework
 * Glide
 
@@ -88,8 +88,10 @@ protected area. USER ID = id-of-user-nice
 │   │   └── user.go
 │   ├── dbs
 │   │   ├── dispatch.go
+│   │   ├── logger.go
 │   │   └── mongodb.go
 │   ├── middlewares
+│   │   ├── loggerrequest.go
 │   │   ├── permission.go
 │   │   └── requiretoken.go
 │   ├── models
@@ -104,14 +106,24 @@ protected area. USER ID = id-of-user-nice
 │   ├── server.go
 │   ├── services
 │   │   └── jwtauth.go
-│   └── webapp
-│       └── init.go
+│   └── shared
+│       ├── bcrypt.go
+│       └── pathproject.go
+├── bin
+│   ├── api-server-arm
+│   ├── api-server-x32
+│   └── api-server-x64
 ├── docs
 │   └── httpie.txt
 ├── glide.lock
 ├── glide.yaml
 ├── README.md
 ├── scripts
+│   ├── build-all.sh
+│   ├── build-arm.sh
+│   ├── build-docker-image.sh
+│   ├── build-linux-x32.sh
+│   └── build-linux-x64.sh
 └── token.txt
 
 ```

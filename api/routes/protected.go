@@ -29,5 +29,18 @@ func Protected(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 		r.Get("/user/:id", controller.GetUser(s))
 		r.Put("/user/:id", controller.UpdateUser(s))
 		r.Delete("/user/:id", controller.GetUser(s))
+
+		//CRUD Permission
+		r.Post("/permission", controller.CreatePermission(s))
+		r.Get("/permission/:id", controller.GetPermission(s))
+		r.Put("/permission/:id", controller.UpdatePermission(s))
+		r.Delete("/permission/:id", controller.DeletePermission(s))
+
+		//CRUD Project
+		r.Post("/project", controller.CreateProject(s))
+		r.Get("/project/:id", controller.GetProject(s))
+		r.Put("/project/:id", controller.UpdateProject(s))
+		r.Delete("/project/:id", controller.DeleteProject(s))
+
 	}
 }
