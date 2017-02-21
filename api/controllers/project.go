@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gosimple/slug"
 	"github.com/pressly/chi"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -59,6 +60,7 @@ func CreateProject(s *db.Dispatch) http.HandlerFunc {
 		u.ID = bson.NewObjectId()
 		u.CreatedAt = time.Now()
 		u.UpdatedAt = time.Now()
+		u.Slug = slug.Make(u.Label)
 
 		ss.DB("login").C("projects").Insert(u)
 		uj, _ := json.Marshal(u)
@@ -130,6 +132,7 @@ func UpdateProject(s *db.Dispatch) http.HandlerFunc {
 		u := model.Project{}
 		json.NewDecoder(r.Body).Decode(&u)
 		u.UpdatedAt = time.Now()
+		u.Slug = slug.Make(u.Label)
 
 		c := ss.DB("login").C("projects")
 
