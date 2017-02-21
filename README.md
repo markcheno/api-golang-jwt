@@ -75,7 +75,7 @@ Content-Type: text/plain; charset=utf-8
 Date: Mon, 13 Feb 2017 12:35:09 GMT
 Vary: Origin
 
-protected area. USER ID = id-of-user-nice
+protected area. USER ID = 58aadf2ce3bdea2e00f9563b
 ```
 
 ### Project tree
@@ -178,6 +178,64 @@ protected area. USER ID = id-of-user-nice
     "updated_at" : ISODate("2017-02-20T12:21:00.333+0000")
 }
 ```
+
+### Routes
+You can crate a new methods or distinct kind of routes, just edit the package on folder `routes`, file `main.go`.
+For this project, I'm created two routes, one for public access and other need a `JWT` authentication. By default we need a route with a `slug` on the URL request, to check the users belongs to the project, and than check permission of owner. 
+```
+├── api
+│   ├── routes
+│   │   ├── main.go
+│   │   ├── protected.go
+│   │   └── public.go
+```
+
+### Middlewares
+Early data check and others purpose.
+```
+├── api
+│   ├── middlewares
+│   │   ├── loggerrequest.go
+│   │   ├── mongodb.go
+│   │   ├── permission.go
+│   │   ├── project.go
+│   │   └── token.go
+```
+
+### Controllers
+For more actions of endpoint just create a CRUD functions on `ROOT of folder` or you can create a `ditinct folder`.
+```
+├── api
+│   ├── controllers
+│   │   ├── admin.go
+│   │   ├── auth.go
+│   │   ├── permission.go
+│   │   ├── project.go
+│   │   └── user.go
+```
+
+### Models
+Models, struct, inteface and wrapper.
+```
+├── api
+│   ├── models
+│   │   ├── jwt.go
+│   │   ├── permission.go
+│   │   ├── project.go
+│   │   └── user.go
+```
+
+### DataBase Connections and loggers
+In this section we concentrate a sessions for all dbs, all in wrapped by `dispatch.go`.
+```
+├── api
+│   ├── dbs
+│   │   ├── dispatch.go
+│   │   ├── logger.go
+│   │   └── mongodb.go
+```
+
+
 ---
 
 The MIT License (MIT)
