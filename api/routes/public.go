@@ -13,10 +13,10 @@ import (
 //Public Routes
 func Public(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 	return func(r chi.Router) {
+		r.Use(middleware.DefaultCompress)
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)
 		r.Use(middleware.Recoverer)
-		r.Use(middleware.DefaultCompress)
 		r.Use(cors.Handler)
 		r.Use(mid.LoggerRequest)
 

@@ -19,7 +19,7 @@ func newMgoSession(s *mgo.Session) *MgoSession {
 }
 
 //StartMongoDB initialize session on mongodb
-func StartMongoDB() *MgoSession {
+func StartMongoDB(msg string) *MgoSession {
 
 	mongoDBDialInfo := &mgo.DialInfo{
 		Addrs:   []string{os.Getenv("MONGODB_URL")},
@@ -35,6 +35,6 @@ func StartMongoDB() *MgoSession {
 	}
 	mongoSession.SetMode(mgo.Monotonic, true)
 
-	log.Printf("[MongoDB] connected!")
+	log.Printf("[MongoDB] connected! %s", msg)
 	return newMgoSession(mongoSession)
 }

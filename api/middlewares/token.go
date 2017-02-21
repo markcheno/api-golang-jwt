@@ -11,8 +11,8 @@ import (
 	mid "../models"
 )
 
-// RequireTokenAuthentication middleware for vaidation token
-func RequireTokenAuthentication(next http.Handler) http.Handler {
+// TokenAuthentication middleware for vaidation token
+func TokenAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		var tokenStr string
@@ -49,7 +49,7 @@ func RequireTokenAuthentication(next http.Handler) http.Handler {
 
 		if claims, ok := token.Claims.(*mid.Claims); ok && token.Valid {
 			log.Printf("[RequireTokenAuthentication] Token valid! Go forward")
-			ctx := context.WithValue(r.Context(), mid.MyKey, *claims)
+			ctx := context.WithValue(r.Context(), mid.JwtKey, *claims)
 			next.ServeHTTP(w, r.WithContext(ctx))
 
 		} else if ve, ok := err.(*jwt.ValidationError); ok {

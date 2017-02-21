@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	model "../models"
+	service "../services"
 )
 
 //Flags for biwise
@@ -67,7 +68,7 @@ func checkFlags(route string, perms int) bool {
 
 		break
 	case "ADMIN":
-		if (perms & OWNER) > 0 {
+		if (perms & ADMIN) > 0 {
 			flag = true
 		}
 
@@ -79,45 +80,40 @@ func checkFlags(route string, perms int) bool {
 
 // CheckUserPermission, get a method used and endpoint and check
 // if user have permissions granted
-func checkUserPermisson(action string, endpoint string, claims model.Claims) bool {
-	//recover the user_id from context
+func checkUserPermisson(action string, endpoint string, projectID string, claims model.Claims) bool {
 
-	log.Printf("[CheckUserPermission] UserID = %q", claims.UserID)
+	log.Printf("[UserHavePermission] UserID = %q", claims.UserID)
+	log.Printf("[UserHavePermission] ProjectID = %q", projectID)
 
-	//find no mongodb { user: user_id, endpoint: endpoint }
-	//MOC return mongodb the actions
-	var actions = map[string]int{
-		"GET":    1,
-		"POST":   2,
-		"UPDATE": 4,
-		"DELETE": 8,
-		//"OWNER":    16,
-		//"ADMIN":    32,
+	perm, perr := service.UserGetPermissions(claims.UserID, projectID, endpoint)
+	if perr != nil {
+		log.Printf("[UserHavePermission] Err: %s", perr)
+		return false
 	}
 
-	//intereate each permission and sum bit each bit
+	log.Printf("[UserHavePermission] = %+v \n", perm)
+
+	//interate each permission and sum, bit each bit
 	var perms = 0
-	for _, v := range actions {
-		//fmt.Printf("method[%s] bit[%d]\n", k, v)
-		perms |= v
-		//fmt.Printf("permission = %d\n", perms)
+	for _, vv := range perm.Permission {
+		perms |= vv.Value
 	}
 
 	//check if return something and the flags are ok
 	if perms > 0 && checkFlags(action, perms) {
-		log.Printf("[CheckUserPermission] User Authorized")
+		log.Printf("[UserHavePermission] User Authorized")
 		return true
 	}
 
-	log.Printf("[CheckUserPermission] User Unauthorized")
+	log.Printf("[UserHavePermission] User Unauthorized")
 	return false
 }
 
-// RequirePermission middleware for validate permission of user
-func RequirePermission(next http.Handler) http.Handler {
+// UserHavePermission middleware for validate permission of user
+func UserHavePermission(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		claims, ok := r.Context().Value(model.MyKey).(model.Claims)
+		claims, ok := r.Context().Value(model.JwtKey).(model.Claims)
 		if !ok {
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(500)
@@ -125,9 +121,26 @@ func RequirePermission(next http.Handler) http.Handler {
 			return
 		}
 
-		log.Printf("[RequirePermisson] method=%s EndPoint=%s", r.Method, r.URL.RequestURI())
+		projectID, ok := r.Context().Value(model.ProjKey).(string)
+		if !ok {
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			w.WriteHeader(500)
+			fmt.Fprintf(w, `{"message":"Error on decode Context ProjectID"}`)
+			return
+		}
 
-		if checkUserPermisson(r.Method, r.URL.RequestURI(), claims) {
+		// Check in future
+		// mgos, ok := r.Context().Value(model.DbKey).(*mgo.Database)
+		// if !ok {
+		// 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		// 	w.WriteHeader(500)
+		// 	fmt.Fprintf(w, `{"message":"Error on decode Session MongoDB"}`)
+		// 	return
+		// }
+
+		log.Printf("[UserHavePermission] method=%s EndPoint=%s", r.Method, r.URL.RequestURI())
+
+		if checkUserPermisson(r.Method, r.URL.RequestURI(), projectID, claims) {
 			next.ServeHTTP(w, r)
 		}
 

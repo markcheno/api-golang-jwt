@@ -12,8 +12,22 @@ Create a user set admin
 ------------------------
 http --verbose post http://localhost:3333/user email=tzilli@inviron.com.br password=1233 admin:=true
 
+Create a project
+------------------------------------
+http --verbose --auth-type=jwt --auth=$(cat token.txt): post http://localhost:3333/project \
+    owner="58aadf2ce3bdea2e00f9563b" \
+    users:='["58aadf2ce3bdea2e00f9563b"]' \
+    slug="test-project" \
+    label="Test Project" \
+    description="Test Project crud"
+
 
 Create a user permission by endpoint
 ------------------------------------
+http --verbose --auth-type=jwt --auth=$(cat token.txt): post http://localhost:3333/permission \
+    owner="58aadf2ce3bdea2e00f9563b" \
+    project="58ab1f5d846dd72723990def" \
+    endpoint="project" \
+    permissions:='[{"method":"ALL", "value":16}]'
 
 

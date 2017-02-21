@@ -21,7 +21,7 @@ func init() {
 func LoggerRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		claims, ok := r.Context().Value(model.MyKey).(model.Claims)
+		claims, ok := r.Context().Value(model.JwtKey).(model.Claims)
 		if !ok {
 			claims.UserID = "Unknow"
 		}

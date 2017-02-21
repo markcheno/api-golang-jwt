@@ -13,22 +13,24 @@ import (
 //Protected Routes
 func Protected(s *db.Dispatch, cors *cors.Cors) func(r chi.Router) {
 	return func(r chi.Router) {
+		r.Use(middleware.DefaultCompress)
 		r.Use(middleware.RequestID)
 		r.Use(middleware.Logger)
 		r.Use(middleware.Recoverer)
-		r.Use(middleware.DefaultCompress)
 		r.Use(cors.Handler)
-		r.Use(mid.RequireTokenAuthentication)
-		r.Use(mid.RequirePermission)
-		r.Use(mid.LoggerRequest)
+		//Chain of validation user
+		r.Use(mid.TokenAuthentication) //If token ok
+		r.Use(mid.UserValidOnProject)  //if user belong to project ok
+		r.Use(mid.UserHavePermission)  //if user has permisson on endpoint ok
+		r.Use(mid.LoggerRequest)       //log any request ok
 
 		//endpoint protected
-		r.Get("/admin", controller.Admin())
+		r.Get("/admin/:slug", controller.Admin())
 
 		//CRUD User
-		r.Get("/user/:id", controller.GetUser(s))
-		r.Put("/user/:id", controller.UpdateUser(s))
-		r.Delete("/user/:id", controller.GetUser(s))
+		r.Get("/user/:slug/:id", controller.GetUser(s))
+		r.Put("/user/:slug/:id", controller.UpdateUser(s))
+		r.Delete("/user/:slug/:id", controller.GetUser(s))
 
 		//CRUD Permission
 		r.Post("/permission", controller.CreatePermission(s))

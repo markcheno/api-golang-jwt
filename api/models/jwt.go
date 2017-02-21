@@ -21,6 +21,9 @@ type Key int
 
 //MyKey jwt handdler
 const (
-	MyKey     Key = 0
+	JwtKey    Key = 100000
+	DbKey     Key = 200000
+	UserKey   Key = 300000
+	ProjKey   Key = 400000
 	SecretKey     = "My-temporary-SECRETKey-2017"
 )

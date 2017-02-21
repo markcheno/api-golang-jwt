@@ -16,7 +16,7 @@ type Dispatch struct {
 //StartDispatch load up connections
 func StartDispatch() *Dispatch {
 	//add session of mongodb
-	mongosession := StartMongoDB().Session
+	mongosession := StartMongoDB("Dispatch Service").Session
 	// add logger for dispatch
 	logger := Logger()
 
